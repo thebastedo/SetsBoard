@@ -1,0 +1,11 @@
+{
+  "name": "raspi-setsboard",
+  "description": "Sets Board",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "body-parser": "^1.9.2",
+    "express": "^4.10.1",
+    "sqlite3": "^3.0.2"
+  }
+}
