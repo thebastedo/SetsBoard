@@ -24,6 +24,9 @@ router.route('/song')
 		console.log("/song - POST -- " + song.name() + " - " + song.duration() + " - " + song.validate());
 		song.validate().then(function() {
 			if (song.isValid) {
+				console.log("type of bave..." + typeof song.bave );
+				song.bave();
+				console.log("Saving new song....");
 				res.json({ message: 'Song Created', song: song.toJSON() });
 			} else {
 				res.json({ message: 'Song Create Failed', errors: song.errors });

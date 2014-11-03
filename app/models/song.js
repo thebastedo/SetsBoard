@@ -16,6 +16,12 @@ var Song = model("Song")
 			}
 		}
 	})
-	.attr('duration');
+	.attr('duration')
+	.attr('state');
+
+Song.bave = function() {
+	console.log("Saving Song! " + this.name() + ", " + this.duration() + ", " + this.state() + ".");
+	return true
+}
 
 module.exports = Song
