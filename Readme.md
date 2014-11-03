@@ -6,7 +6,7 @@ nodejs-model depends on the npm package 'q'. It's package.json has an older vers
 ```
 npm install
 ```
-Go into 'node_modules/nodejs-models/' and edit the package.json. Remove the version number for the 'q' dependancy and replace it with '*'. After the package.json is update run
+Go into 'node_modules/nodejs-models/' and edit the package.json. Remove the version number for the 'q' dependancy and replace it with '*'. After the package.json is updated run
 ```
 npm update
 ``` 
@@ -16,3 +16,6 @@ this will update you to a version of q that will work and not throw errors when 
 ```
 node server.js
 ```
+
+## TODO
+1. Everything :(

@@ -23,7 +23,6 @@ router.route('/song')
 		song = Song.create(req.body);
 		console.log("/song - POST -- " + song.name() + " - " + song.duration() + " - " + song.validate());
 		song.validate().then(function() {
-			console.log("Validating song..." + song.isValid)
 			if (song.isValid) {
 				res.json({ message: 'Song Created', song: song.toJSON() });
 			} else {
