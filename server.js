@@ -3,6 +3,8 @@ var express			= require('express');
 var app 				= express();
 var bodyParser	= require('body-parser');
 
+var Song 				= require('./app/models/song');
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -18,8 +20,16 @@ router.get('/', function(req, res) {
 // song routes
 router.route('/song')
 	.post(function(req, res) {
-		console.log("/song - POST -- " + req.body.name + " - " + req.body.duration);
-		res.json({ message: 'Song Created' });
+		song = Song.create(req.body);
+		console.log("/song - POST -- " + song.name() + " - " + song.duration() + " - " + song.validate());
+		song.validate().then(function() {
+			console.log("Validating song..." + song.isValid)
+			if (song.isValid) {
+				res.json({ message: 'Song Created', song: song.toJSON() });
+			} else {
+				res.json({ message: 'Song Create Failed', errors: song.errors });
+			}
+		});
 	})
 	.get(function(req, res) {
 		console.log("/song - GET -- get all songs");
