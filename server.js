@@ -26,6 +26,11 @@ app.use('/control', controlroutes);
 // Set Board Routes
 app.use('/board', boardroutes);
 
+// Root route, redirect to the board
+app.get('/', function(req, res) {
+	res.redirect('/board');
+});
+
 // Board View Routes
 
 // start it all up
