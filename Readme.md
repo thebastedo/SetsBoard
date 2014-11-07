@@ -5,7 +5,8 @@ We have a 32” TV in our practice space, it would be nice to use it! Ideally a 
 
 ### Install Node.js on the Raspberry Pi 
 (Referenced by http://joshondesign.com/2013/10/23/noderpi)
-It's generally recommended to get the latest version of raspbian on your raspberri pi.  Do the following:
+
+It's generally recommended to get the latest version of raspbian on your raspberry pi.  Do the following:
 ```
 $ sudo apt-get upgrade;
 $ sudo apt-get update
@@ -20,10 +21,14 @@ You should see
 ```
 v0.10.28
 ```
-Point $NODE_JS_HOME to the directory where you un-tarred Node, and add the bin directory to your PATH using whatever system you prefer (bash profile script, command line vars, etc); So for .bash_profile you can do:
+Point $NODE_JS_HOME to the directory where you un-tarred Node, and add the bin directory to your PATH using whatever system you prefer (bash profile script, command line vars, etc); So in your .bash_profile you can add:
 ```
-NODE_JS_HOME=/home/pi/node-v0.10.2-linux-arm-pi 
+NODE_JS_HOME=/home/pi/node-v0.10.28-linux-arm-pi 
 PATH=$PATH:$NODE_JS_HOME/bin 
+```
+then
+```
+source .bash_profile
 ```
 This will let you run node in any directory. To test npm, do:
 ```
