@@ -2,6 +2,9 @@ var express			= require('express');
 var app 				= express();
 
 var Song 				= require('../models/song');
+var sngdb			= require('../db/SongDB');
+
+var songdb = new sngdb();
 
 // routes and such
 var apiRouter = express.Router();
@@ -18,7 +21,12 @@ apiRouter.route('/song')
 		song.validate().then(function() {
 			if (song.isValid) {
 				console.log("Saving new song....");
-				res.json({ message: 'Song Created', song: song.toJSON() });
+				songdb.save(song, function(error) { 
+					if (error != null) {
+						console.log("Error: " + error);
+					}
+					res.json({ message: 'Song Created', song: song.toJSON() });
+				});
 			} else {
 				res.json({ message: 'Song Create Failed', errors: song.errors });
 			}
