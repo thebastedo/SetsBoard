@@ -28,23 +28,36 @@ PATH=$PATH:$NODE_JS_HOME/bin
 ```
 then
 ```
-source .bash_profile
+$ source .bash_profile
 ```
 This will let you run node in any directory. To test npm, do:
 ```
-npm —version
+$ npm —version
 ```
 This should give you the version of npm that you are using.
 
 ### Installing node packages
 
-nodejs-model depends on the npm package 'q'. It's package.json has an older version of it. After running 
+To install the node packages, run the following:
 ```
-npm install
+$ npm install
 ```
-Go into 'node_modules/nodejs-models/' and edit the package.json. Remove the version number for the 'q' dependancy and replace it with '*'. After the package.json is updated run
+nodejs-model depends on the npm package 'q'. It's package.json has an older version of it. After running npm install,
+go into 'node_modules/nodejs-models/' and edit the package.json. 
 ```
-npm update
+$ cd node_modules/nodejs-models
+$ vim package.json
+
+Change the following:
+> "q": "<old version of q>"
+
+ to
+
+ > "q": "*",
+```
+After the package.json is updated run
+```
+$ npm update
 ``` 
 this will update you to a version of q that will work and not throw errors when one validates the model.
 
