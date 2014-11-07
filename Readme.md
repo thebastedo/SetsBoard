@@ -42,7 +42,7 @@ To install the node packages, run the following:
 ```
 $ npm install
 ```
-nodejs-model depends on the npm package 'q'. It's package.json has an older version of it. After running npm install,
+nodejs-model depends on the npm package 'q'. Its package.json has an older version of it. After running npm install,
 go into 'node_modules/nodejs-models/' and edit the package.json. 
 ```
 $ cd node_modules/nodejs-models
