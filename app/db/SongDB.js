@@ -11,7 +11,7 @@ function SongDB() {
 			if (s.isValid) {
 				console.log("Inserting song...");
 				db.run(
-					'INSERT INTO songs (name, duration, status) VALUES (?, ?, ?)',
+					'INSERT INTO songs (id, name, duration, status) VALUES (NULL, ?, ?, ?)',
 					[s.name(), s.duration(), s.state()],
 					function(error) { cb(error); console.log("insert complete..."); }
 				);
