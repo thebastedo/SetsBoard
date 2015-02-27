@@ -1,4 +1,4 @@
-var model = require('nodejs-model')
+var model = require('nodejs-model');
 
 var Song = model("Song")
 	.attr('name', {
@@ -19,4 +19,4 @@ var Song = model("Song")
 	.attr('duration')
 	.attr('state');
 
-module.exports = Song
+module.exports = Song;

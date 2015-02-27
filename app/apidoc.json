@@ -1,0 +1,7 @@
+{
+	"name": "SetsBoard API",
+	"version": "0.1.0",
+	"description": "Digital Set board for a band practice space",
+	"title": "SetsBoard",
+	"url": "http://localhost:8080/api"
+}

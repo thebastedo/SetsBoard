@@ -19,6 +19,9 @@ var port = process.env.PORT || 8080;
 
 // API Routes
 app.use('/api', apiroutes);
+// API Docs
+console.log('API Docs (' + __dirname + '/app/docs) available at /docs');
+app.use('/docs', express.static(__dirname + '/app/docs'));
 
 // Control View Routes
 app.use('/control', controlroutes);
