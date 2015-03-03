@@ -1,7 +1,7 @@
 var model = require('nodejs-model');
 
 var Song = model("Song")
-    .attr('_id')
+    .attr('id')
 	.attr('name', {
 		validations: {
 			presence: {

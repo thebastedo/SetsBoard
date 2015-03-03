@@ -1,7 +1,7 @@
 var model = require('nodejs-model');
 
 var Set = model('Set')
-    .attr('_id')
+    .attr('id')
 	.attr('name', {
 		validations: {
 			presence: true,
