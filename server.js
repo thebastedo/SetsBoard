@@ -1,21 +1,25 @@
 // Base app setup
-var express			= require('express');
-var app 				= express();
-var bodyParser	= require('body-parser');
+var express = require('express'),
+    app = express(),
+    morgan = require('morgan');
+    bodyParser = require('body-parser');
 
 // Models
-var Song 				= require('./app/models/song');
+var Song = require('./app/models/song');
 
 // Routers
-var apiroutes		= require('./app/routes/api');
-var controlroutes = require('./app/routes/control');
-var boardroutes = require('./app/routes/board');
+var apiroutes = require('./app/routes/api'),
+    controlroutes = require('./app/routes/control'),
+    boardroutes = require('./app/routes/board');
 
 // Setup body parser in express
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 var port = process.env.PORT || 8080;
+
+// use morgan logging
+app.use(morgan('combined'));
 
 // API Routes
 app.use('/api', apiroutes);

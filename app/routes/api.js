@@ -33,7 +33,7 @@ apiRouter.route('/songs')
      *      "songs": [
      *          {
      *              "name": "Down With the Night",
-     *              "duration": "3:29",
+     *              "duration": 229,
      *              "state": "learning"
      *          }
      *      ]
@@ -271,7 +271,7 @@ module.exports = apiRouter;
  * @apiSuccess {String} status Success Status
  * @apiSuccess {Object} song Song object
  * @apiSuccess {String} song.name Song name
- * @apiSuccess {String} song.duration Song duration
+ * @apiSuccess {String} song.duration Song duration in seconds
  * @apiSuccess {String} song.status Song status (ready/learning)
  *
  * @apiSuccessExample {json} Success-Response:
@@ -280,7 +280,7 @@ module.exports = apiRouter;
  *      "status": "success",
  *      "song": {
  *          "name": "Down With the Night",
- *          "duration":" "3:29",
+ *          "duration":" 229,
  *          "state": "learning"
  *      }
  *  }
@@ -291,13 +291,13 @@ module.exports = apiRouter;
  * @apiDefine SongBody
  *
  * @apiParam {String{3..5}} name Name of the song
- * @apiParam {String} duration Duration of the song (0:00)
+ * @apiParam {String} duration Duration of the song in seconds 
  * @apiParam {String} state  State of the song, ready/learning
  *
  * @apiParamExample {json} Post Body Eample:
  *  {
  *      "name": "Down With the Night",
- *      "duration": "3:29",
+ *      "duration": 229,
  *      "state": "learning"
  *  }
  *
