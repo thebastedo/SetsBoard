@@ -1,7 +1,7 @@
-var song = require('../models/song'),
-    set = require('../models/set');
+var Song = require('../models/song'),
+    SetList = require('../models/setlist');
 
-var SetDB = function() {
+var SetListDB = function() {
     return {
         save: function(s, cb) { 
             s.validate().then(function() {
@@ -17,7 +17,7 @@ var SetDB = function() {
             });
         },
 
-        delete: function(set, cb) {
+        delete: function(s, cb) {
             var error = null;
             cb(error);
         },
@@ -27,7 +27,7 @@ var SetDB = function() {
         },
 
         findById: function(id) {
-            return set.create({_id: id, name: 'name', duration: 229, status: 'learning'});
+            return SetList.create({_id: id, name: 'name', duration: 229, status: 'learning'});
         },
 
         _create: function(s, cb) { cb(null); },
@@ -35,4 +35,4 @@ var SetDB = function() {
     };
 };
 
-module.exports = SetDB;
+module.exports = SetListDB;

@@ -1,7 +1,7 @@
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('./db/bandsetlist.db');
 
-var song = require('../models/song');
+var song = require('../models/Song');
 
 var SongDB = function() {
     return {

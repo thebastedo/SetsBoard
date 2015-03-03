@@ -4,9 +4,6 @@ var express = require('express'),
     morgan = require('morgan');
     bodyParser = require('body-parser');
 
-// Models
-var Song = require('./app/models/song');
-
 // Routers
 var apiroutes = require('./app/routes/api'),
     controlroutes = require('./app/routes/control'),

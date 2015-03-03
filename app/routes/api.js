@@ -1,13 +1,14 @@
 var express = require('express'),
     app = express();
 
-var Song = require('../models/song'),
-    sngdb = require('../db/SongDB'),
+var Song = require('../models/Song'),
+    Songdb = require('../db/SongDB'),
+    SetList = require('../models/SetList'),
+    SetListDB = require('../db/SetListDB'),
     success = require('../responses/success');
 
-var songdb = new sngdb();
-
-var setdb = {};
+var songdb = new Songdb(),
+    setlistdb = new SetListDB();
 
 // routes and such
 var apiRouter = express.Router();
@@ -215,7 +216,6 @@ apiRouter.route('/sets')
      *
      */
 	.get(function(req, res) {
-        // TODO: get the set lists
         if (true) {
             res.status(200).json(new success({total: 0, sets: []}));
         } else {
@@ -245,14 +245,14 @@ apiRouter.route('/set')
      *
      */
 	.post(function(req, res) {
-        var set = Set.create(req.body);
-		set.validate().then(function() {
-			if (set.isValid) {
-                setdb.save(set, function(error) {
+        var s = SetList.create(req.body);
+		s.validate().then(function() {
+			if (s.isValid) {
+                setlistdb.save(s, function(error) {
                     if (error !== null) {
                         res.status(500).json(new error('set create failed'));
                     } else {
-                        res.status(200).json(new success({set: set.toJSON()}));
+                        res.status(200).json(new success({set: s.toJSON()}));
                     }
                 });
             } else {

@@ -1,6 +1,6 @@
 var model = require('nodejs-model');
 
-var Set = model('Set')
+var SetList = model('Set')
     .attr('id')
 	.attr('name', {
 		validations: {
@@ -9,3 +9,5 @@ var Set = model('Set')
 		}
 	})
 	.attr('songs');
+
+module.exports = SetList;
