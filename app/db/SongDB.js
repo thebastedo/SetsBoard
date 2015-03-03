@@ -3,23 +3,45 @@ var db = new sqlite3.Database('./db/bandsetlist.db');
 
 var song = require('../models/song');
 
-function SongDB() {
+var SongDB = function() {
+    return {
+        save: function(s, cb) {
+            s.validate().then(function() {
+                if (s.isValid) {
+                    if (s._id !== null) {
+                        this._update(s, cb);
+                    } else {
+                        this._create(s, cb);
+                    }
+                } else {
+                    cb(s.errors);
+                }
+            });
+        },
 
-	this.save = function(s, cb) {
-		console.log("SongDB - Save - Validating Song");
-		s.validate().then(function() {
-			if (s.isValid) {
-				console.log("Inserting song...");
-				db.run(
-					'INSERT INTO songs (id, name, duration, status) VALUES (NULL, ?, ?, ?)',
-					[s.name(), s.duration(), s.state()],
-					function(error) { cb(error); console.log("insert complete..."); }
-				);
-			} else {
-				console.log("SongDB - Save - ERROR :: song invalid");
-			}
-		});
-	}
-}
+        delete: function(id, cb) {
+            var error = null;
+            cb(error);
+        },
 
-module.exports = SongDB
+        findAll: function(cb) {
+            return [];
+        },
+
+        findById: function(id, cb) {
+            return song.create({_id: id, name: 'name', duration: 229, status: 'learning'});
+        },
+
+        _create: function(s, cb) { 
+            db.run(
+                'INSERT INTO songs (id, name, duration, status) VALUES (NULL, ?, ?, ?)',
+                [s.name(), s.duration(), s.state()],
+                function(error) { cb(error); }
+            );
+        },
+        _update: function(s, cb) { cb(null); },
+
+    };
+};
+
+module.exports = SongDB;

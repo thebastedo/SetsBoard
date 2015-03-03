@@ -1,10 +1,13 @@
-var express			= require('express');
-var app 				= express();
+var express = require('express'),
+    app = express();
 
-var Song 				= require('../models/song');
-var sngdb			= require('../db/SongDB');
+var Song = require('../models/song'),
+    sngdb = require('../db/SongDB'),
+    success = require('../responses/success');
 
 var songdb = new sngdb();
+
+var setdb = {};
 
 // routes and such
 var apiRouter = express.Router();
@@ -49,8 +52,14 @@ apiRouter.route('/songs')
      *
      */
 	.get(function(req, res) {
-		console.log("/song - GET -- get all songs");
-		res.json({ message: 'Getting all songs...' });
+        // TODO: get all the songs ...
+        if (true) {
+            var r = new success({total: 0, sings: []});
+            res.status(200).json(JSON.stringify(r));
+        } else {
+            var e = new error('No songs found');
+            res.status(404).json(JSON.stringify(e));
+        }
 	});
 
 
@@ -78,18 +87,17 @@ apiRouter.route('/song')
      */
 	.post(function(req, res) {
 		song = Song.create(req.body);
-		console.log("/song - POST -- " + song.name() + " - " + song.duration() + " - " + song.validate());
 		song.validate().then(function() {
 			if (song.isValid) {
-				console.log("Saving new song....");
 				songdb.save(song, function(error) { 
 					if (error !== null) {
-						console.log("Error: " + error);
-					}
-					res.json({ message: 'Song Created', song: song.toJSON() });
+                        res.status(500).json(new error('Create song failed'));
+					} else {
+                        res.status(200).json(new success({ song: song.toJSON() }));
+                    }
 				});
 			} else {
-				res.json({ message: 'Song Create Failed', errors: song.errors });
+				res.status(500).json(new error(song.errors));
 			}
 		});
 	});
@@ -110,8 +118,13 @@ apiRouter.route('/song/:song_id')
      *
      */
 	.get(function(req, res) {
-		console.log("/song/" + req.params.song_id + " - GET -- get song by id");
-		res.json({ message: 'Song...'});
+        // TODO: load song
+        var song = Song.create({'name':'name','duration':229,'status':'learning'});
+        if (true) {
+            res.status(200).json(new success({song: song.toJSON()}));
+        } else {
+            res.status(404).json(new error('Song not found'));
+        }
 	})
 
     /**
@@ -129,10 +142,31 @@ apiRouter.route('/song/:song_id')
      *
      * @apiUse SongNotFound
      *
+     * @apiError (500) CreateFailed The song could not be created
+     *  
+     * @apiErrorExample {json} Error-Response:
+     *  HTTP/1.1 500 Internal Server Error
+     *  {
+     *      "error": "Create Song Failed"
+     *  }
+     *
      */
 	.put(function(req, res) {
-		console.log("/song/" + req.params.song_id + " - PUT -- update song");
-		res.json({ message: 'Song Updated' });
+        // TODO: figure out update flow
+		song = Song.create(req.body);
+		song.validate().then(function() {
+			if (song.isValid) {
+				songdb.update(song, function(error) { 
+					if (error !== null) {
+                        res.status(500).json(new error('Song update failed'));
+					} else {
+                        res.status(200).json(new success({ song: song.toJSON() }));
+                    }
+				});
+			} else {
+				res.status(500).json(new error(song.errors));
+			}
+		});
 	})
 
     /**
@@ -150,8 +184,14 @@ apiRouter.route('/song/:song_id')
      *
      */
 	.delete(function(req, res) {
-		console.log("/song/" + req.params.song_id + " - DELETE -- delete song");
-		res.json({ message: 'Song Deleted' });
+        // TODO: figure out delete flow
+        songdb.delete(req.params.song_id, function(error) {
+            if (error !== null) {
+                res.status(404).json(new error('Song not found'));
+            } else {
+                res.status(200).json(new success({song: { _id: req.params.song_id } }));
+            }
+        });
 	});
 
 // set routes
@@ -175,8 +215,12 @@ apiRouter.route('/sets')
      *
      */
 	.get(function(req, res) {
-		console.log('/set - GET -- get all set lists');
-		res.json({ message: 'Getting all sets...' });
+        // TODO: get the set lists
+        if (true) {
+            res.status(200).json(new success({total: 0, sets: []}));
+        } else {
+            res.status(404).json(new error('No sets found'));
+        }
 	});
 
 apiRouter.route('/set')
@@ -201,8 +245,20 @@ apiRouter.route('/set')
      *
      */
 	.post(function(req, res) {
-		console.log("/set - POST -- " + req.body.name);
-		res.json({ message: 'Set Created' });
+        var set = Set.create(req.body);
+		set.validate().then(function() {
+			if (set.isValid) {
+                setdb.save(set, function(error) {
+                    if (error !== null) {
+                        res.status(500).json(new error('set create failed'));
+                    } else {
+                        res.status(200).json(new success({set: set.toJSON()}));
+                    }
+                });
+            } else {
+                res.status(500).json(new error('set create failed'));
+            }
+        });
 	});
 
 apiRouter.route('/set/:set_id')
@@ -221,6 +277,8 @@ apiRouter.route('/set/:set_id')
      *
      */
 	.get(function(req, res) {
+        // TODO 
+
 		console.log('/set/' + req.params.set_id + ' -- GET - get set id: '+ req.params.set_id);
 		res.json({ message: 'get set', id: req.params.set_id });
 	})

@@ -1,6 +1,7 @@
 var model = require('nodejs-model');
 
 var Song = model("Song")
+    .attr('_id')
 	.attr('name', {
 		validations: {
 			presence: {
@@ -16,7 +17,15 @@ var Song = model("Song")
 			}
 		}
 	})
-	.attr('duration')
+	.attr('duration', {
+        validations: {
+            format: {
+                with: /^\d*$/, 
+                allowBlank: true, 
+                message: 'only digits are allowed, or empty string.'
+            }
+        }
+    })
 	.attr('state');
 
 module.exports = Song;
