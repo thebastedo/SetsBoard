@@ -1,5 +1,5 @@
-var Song = require('../models/song'),
-    SetList = require('../models/setlist');
+var Song = require('../models/Song'),
+    SetList = require('../models/SetList');
 
 var SetListDB = function() {
     return {
