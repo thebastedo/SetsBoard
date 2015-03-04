@@ -2,14 +2,11 @@ var express = require('express'),
     app = express();
 
 var Song = require('../models/Song'),
-    Songdb = require('../db/SongDB'),
+    SongDB = require('../db/SongDB'),
     SetList = require('../models/SetList'),
     SetListDB = require('../db/SetListDB'),
     success = require('../responses/success'),
     error = require('../responses/error');
-
-var songdb = new Songdb(),
-    setlistdb = new SetListDB();
 
 // routes and such
 var apiRouter = express.Router();
@@ -54,13 +51,17 @@ apiRouter.route('/songs')
      *
      */
 	.get(function(req, res) {
-        var songs = songdb.findAll(function(results) {
-            if (results.length > 0) {
-                var r = new success({total: 0, sings: results});
-                res.status(200).json(JSON.stringify(r));
+        var songs = SongDB.findAll(function(error,results) {
+            var e,r;
+            if (error !== null) {
+                e = new error(error);
+                res.status(500).json(e);
+            } else if (results.length > 0) {
+                r = new success({total: 0, sings: results});
+                res.status(200).json(r);
             } else {
-                var e = new error('No songs found');
-                res.status(404).json(JSON.stringify(e));
+                e = new error('No songs found');
+                res.status(404).json(e);
             }
         });
 	});
@@ -92,10 +93,11 @@ apiRouter.route('/song')
 		song = Song.create(req.body);
 		song.validate().then(function() {
 			if (song.isValid) {
-				songdb.save(song, function(error) { 
+				songdb.save(song, function(error,id) { 
 					if (error !== null) {
-                        res.status(500).json(new error('Create song failed'));
+                        res.status(500).json(new error(error));
 					} else {
+                        song.id = id;
                         res.status(200).json(new success({ song: song.toJSON() }));
                     }
 				});
@@ -121,13 +123,15 @@ apiRouter.route('/song/:song_id')
      *
      */
 	.get(function(req, res) {
-        // TODO: load song
-        var song = Song.create({'name':'name','duration':229,'status':'learning'});
-        if (true) {
-            res.status(200).json(new success({song: song.toJSON()}));
-        } else {
-            res.status(404).json(new error('Song not found'));
-        }
+        SongDB.findById(req.params.song_id, function(error, result) {
+            if (error !== null) {
+                res.status(500).json(error);
+            } else if (result) {
+                res.status(200).json(new success({song: result.toJSON()}));
+            } else {
+                res.status(404).json(new error('Song not found'));
+            }
+        });
 	})
 
     /**
@@ -155,14 +159,14 @@ apiRouter.route('/song/:song_id')
      *
      */
 	.put(function(req, res) {
-        // TODO: figure out update flow
 		song = Song.create(req.body);
 		song.validate().then(function() {
 			if (song.isValid) {
-				songdb.update(song, function(error) { 
+				songdb.save(song, function(error,id) { 
 					if (error !== null) {
-                        res.status(500).json(new error('Song update failed'));
+                        res.status(500).json(new error(error));
 					} else {
+                        song.id = id;
                         res.status(200).json(new success({ song: song.toJSON() }));
                     }
 				});
@@ -188,7 +192,7 @@ apiRouter.route('/song/:song_id')
      */
 	.delete(function(req, res) {
         // TODO: figure out delete flow
-        songdb.delete(req.params.song_id, function(error) {
+        SongDB.delete(req.params.song_id, function(error) {
             if (error !== null) {
                 res.status(404).json(new error('Song not found'));
             } else {
