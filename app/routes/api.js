@@ -51,10 +51,10 @@ apiRouter.route('/songs')
      *
      */
 	.get(function(req, res) {
-        var songs = SongDB.findAll(function(error,results) {
+        var songs = SongDB.findAll(function(err,results) {
             var e,r;
-            if (error !== null) {
-                e = new error(error);
+            if (err !== null) {
+                e = new error(err);
                 res.status(500).json(e);
             } else if (results.length > 0) {
                 r = new success({total: 0, sings: results});
@@ -93,9 +93,9 @@ apiRouter.route('/song')
 		song = Song.create(req.body);
 		song.validate().then(function() {
 			if (song.isValid) {
-				SongDB.save(song, function(error,id) { 
-					if (error !== null) {
-                        res.status(500).json(new error(error));
+				SongDB.save(song, function(err,id) { 
+					if (err !== null) {
+                        res.status(500).json(new error(err));
 					} else {
                         song.id = id;
                         res.status(200).json(new success({ song: song.toJSON() }));
@@ -123,9 +123,9 @@ apiRouter.route('/song/:song_id')
      *
      */
 	.get(function(req, res) {
-        SongDB.findById(req.params.song_id, function(error, result) {
-            if (error !== null) {
-                res.status(500).json(error);
+        SongDB.findById(req.params.song_id, function(err, result) {
+            if (err !== null) {
+                res.status(500).json(err);
             } else if (result) {
                 res.status(200).json(new success({song: result.toJSON()}));
             } else {
@@ -162,9 +162,9 @@ apiRouter.route('/song/:song_id')
 		song = Song.create(req.body);
 		song.validate().then(function() {
 			if (song.isValid) {
-				SongDB.save(song, function(error,id) { 
-					if (error !== null) {
-                        res.status(500).json(new error(error));
+				SongDB.save(song, function(err,id) { 
+					if (err !== null) {
+                        res.status(500).json(new error(err));
 					} else {
                         song.id = id;
                         res.status(200).json(new success({ song: song.toJSON() }));
@@ -191,9 +191,8 @@ apiRouter.route('/song/:song_id')
      *
      */
 	.delete(function(req, res) {
-        // TODO: figure out delete flow
-        SongDB.delete(req.params.song_id, function(error) {
-            if (error !== null) {
+        SongDB.delete(req.params.song_id, function(err) {
+            if (err !== null) {
                 res.status(404).json(new error('Song not found'));
             } else {
                 res.status(200).json(new success({song: { _id: req.params.song_id } }));
@@ -222,11 +221,15 @@ apiRouter.route('/sets')
      *
      */
 	.get(function(req, res) {
-        if (true) {
-            res.status(200).json(new success({total: 0, sets: []}));
-        } else {
-            res.status(404).json(new error('No sets found'));
-        }
+        SetListDB.findAll(function(err, results) {
+            if (err !== null) {
+                res.status(500).json(new error(err));
+            } else if (results.length > 0) {
+                res.status(200).json(new success({total: results.length, sets: results}));
+            } else {
+                res.status(404).json(new error('No sets found'));
+            }
+        });
 	});
 
 apiRouter.route('/set')
@@ -254,10 +257,11 @@ apiRouter.route('/set')
         var s = SetList.create(req.body);
 		s.validate().then(function() {
 			if (s.isValid) {
-                setlistdb.save(s, function(error) {
-                    if (error !== null) {
-                        res.status(500).json(new error('set create failed'));
+                setlistdb.save(s, function(err, id) {
+                    if (err !== null) {
+                        res.status(500).json(new error(err));
                     } else {
+                        s.id = id;
                         res.status(200).json(new success({set: s.toJSON()}));
                     }
                 });
@@ -283,10 +287,15 @@ apiRouter.route('/set/:set_id')
      *
      */
 	.get(function(req, res) {
-        // TODO 
-
-		console.log('/set/' + req.params.set_id + ' -- GET - get set id: '+ req.params.set_id);
-		res.json({ message: 'get set', id: req.params.set_id });
+        SetListDB.findById(req.params.set_id, function(err, result) {
+            if (err !== null) {
+                res.status(500).json(new error(err));
+            } else if (result) {
+                res.status(200).json(new success({set: result.toJSON() }));
+            } else {
+                res.status(404).json(new error('Set not found'));
+            }
+        });
 	})
     /**
      * @api {put} /set/:id Update Set
@@ -305,8 +314,20 @@ apiRouter.route('/set/:set_id')
      *
      */
 	.put(function(req, res) {
-		console.log('/set/' + req.params.set_id + ' -- PUT - update set id: ' + req.params.set_id);
-		res.json({ message: 'updated set', id: req.params.set_id });
+        var s = SetList.create(req.body);
+		s.validate().then(function() {
+			if (s.isValid) {
+                setlistdb.save(s, function(err, id) {
+                    if (err !== null) {
+                        res.status(500).json(new error(err));
+                    } else {
+                        res.status(200).json(new success({set: s.toJSON()}));
+                    }
+                });
+            } else {
+                res.status(500).json(new error('set create failed'));
+            }
+        });
 	})
     /**
      * @api {delete} /set/:id Delete Set
@@ -323,8 +344,13 @@ apiRouter.route('/set/:set_id')
      *
      */
 	.delete(function(req, res) {
-		console.log('/set/' + req.params.set_id + ' -- DELETE - delete set id: ' + req.params.set_id);
-		res.json({ message: 'delete set', id: req.params.set_id });
+        SetListDB.delete(req.params.set_id, function(err) {
+            if (err !== null) {
+                res.status(500).json(new error(err));
+            } else {
+                res.status(200).json(new success({song: {id: req.param.set_id}}));
+            }
+        });
 	});
 
 module.exports = apiRouter;
