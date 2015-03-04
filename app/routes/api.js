@@ -93,7 +93,7 @@ apiRouter.route('/song')
 		song = Song.create(req.body);
 		song.validate().then(function() {
 			if (song.isValid) {
-				songdb.save(song, function(error,id) { 
+				SongDB.save(song, function(error,id) { 
 					if (error !== null) {
                         res.status(500).json(new error(error));
 					} else {
@@ -162,7 +162,7 @@ apiRouter.route('/song/:song_id')
 		song = Song.create(req.body);
 		song.validate().then(function() {
 			if (song.isValid) {
-				songdb.save(song, function(error,id) { 
+				SongDB.save(song, function(error,id) { 
 					if (error !== null) {
                         res.status(500).json(new error(error));
 					} else {
