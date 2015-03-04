@@ -5,7 +5,8 @@ var Song = require('../models/Song'),
     Songdb = require('../db/SongDB'),
     SetList = require('../models/SetList'),
     SetListDB = require('../db/SetListDB'),
-    success = require('../responses/success');
+    success = require('../responses/success'),
+    error = require('../responses/error');
 
 var songdb = new Songdb(),
     setlistdb = new SetListDB();
@@ -53,14 +54,15 @@ apiRouter.route('/songs')
      *
      */
 	.get(function(req, res) {
-        // TODO: get all the songs ...
-        if (true) {
-            var r = new success({total: 0, sings: []});
-            res.status(200).json(JSON.stringify(r));
-        } else {
-            var e = new error('No songs found');
-            res.status(404).json(JSON.stringify(e));
-        }
+        var songs = songdb.findAll(function(results) {
+            if (results.length > 0) {
+                var r = new success({total: 0, sings: results});
+                res.status(200).json(JSON.stringify(r));
+            } else {
+                var e = new error('No songs found');
+                res.status(404).json(JSON.stringify(e));
+            }
+        });
 	});
 
 

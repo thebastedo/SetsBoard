@@ -25,11 +25,11 @@ var SongDB = function() {
         },
 
         findAll: function(cb) {
-            return [];
+            cb([]);
         },
 
         findById: function(id, cb) {
-            return song.create({_id: id, name: 'name', duration: 229, status: 'learning'});
+            cb(song.create({_id: id, name: 'name', duration: 229, status: 'learning'}));
         },
 
         _create: function(s, cb) { 
