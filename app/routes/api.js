@@ -8,12 +8,25 @@ var Song = require('../models/Song'),
     success = require('../responses/success'),
     error = require('../responses/error');
 
+var songDB = new SongDB(),
+    setlistDB = new SetListDB();
+
 // routes and such
 var apiRouter = express.Router();
 
 apiRouter.get('/', function(req, res) {
 	res.redirect('/docs');
 });
+
+apiRouter.route('/error')
+    .get(function(req, res) {
+        res.status(404).json(new error('error test'));
+    });
+
+apiRouter.route('/success')
+    .get(function(req, res) {
+        res.status(200).json(new success({foo: 'bar'}));
+    });
 
 apiRouter.route('/songs')
     /**
@@ -51,13 +64,14 @@ apiRouter.route('/songs')
      *
      */
 	.get(function(req, res) {
-        var songs = SongDB.findAll(function(err,results) {
+        var songs = songDB.findAll(function(err,results) {
             var e,r;
             if (err !== null) {
+                console.log(err);
                 e = new error(err);
                 res.status(500).json(e);
-            } else if (results.length > 0) {
-                r = new success({total: 0, sings: results});
+            } else if (results && results.length > 0) {
+                r = new success({total: results.length, sings: results});
                 res.status(200).json(r);
             } else {
                 e = new error('No songs found');
@@ -93,7 +107,7 @@ apiRouter.route('/song')
 		song = Song.create(req.body);
 		song.validate().then(function() {
 			if (song.isValid) {
-				SongDB.save(song, function(err,id) { 
+				songDB.save(song, function(err,id) { 
 					if (err !== null) {
                         res.status(500).json(new error(err));
 					} else {
@@ -123,7 +137,7 @@ apiRouter.route('/song/:song_id')
      *
      */
 	.get(function(req, res) {
-        SongDB.findById(req.params.song_id, function(err, result) {
+        songDB.findById(req.params.song_id, function(err, result) {
             if (err !== null) {
                 res.status(500).json(err);
             } else if (result) {
@@ -162,7 +176,7 @@ apiRouter.route('/song/:song_id')
 		song = Song.create(req.body);
 		song.validate().then(function() {
 			if (song.isValid) {
-				SongDB.save(song, function(err,id) { 
+				songDB.save(song, function(err,id) { 
 					if (err !== null) {
                         res.status(500).json(new error(err));
 					} else {
@@ -191,7 +205,7 @@ apiRouter.route('/song/:song_id')
      *
      */
 	.delete(function(req, res) {
-        SongDB.delete(req.params.song_id, function(err) {
+        songDB.delete(req.params.song_id, function(err) {
             if (err !== null) {
                 res.status(404).json(new error('Song not found'));
             } else {
@@ -221,10 +235,10 @@ apiRouter.route('/sets')
      *
      */
 	.get(function(req, res) {
-        SetListDB.findAll(function(err, results) {
+        setlistDB.findAll(function(err, results) {
             if (err !== null) {
                 res.status(500).json(new error(err));
-            } else if (results.length > 0) {
+            } else if (results && results.length > 0) {
                 res.status(200).json(new success({total: results.length, sets: results}));
             } else {
                 res.status(404).json(new error('No sets found'));
@@ -257,7 +271,7 @@ apiRouter.route('/set')
         var s = SetList.create(req.body);
 		s.validate().then(function() {
 			if (s.isValid) {
-                setlistdb.save(s, function(err, id) {
+                setlistDB.save(s, function(err, id) {
                     if (err !== null) {
                         res.status(500).json(new error(err));
                     } else {
@@ -287,7 +301,7 @@ apiRouter.route('/set/:set_id')
      *
      */
 	.get(function(req, res) {
-        SetListDB.findById(req.params.set_id, function(err, result) {
+        setlistDB.findById(req.params.set_id, function(err, result) {
             if (err !== null) {
                 res.status(500).json(new error(err));
             } else if (result) {
@@ -317,7 +331,7 @@ apiRouter.route('/set/:set_id')
         var s = SetList.create(req.body);
 		s.validate().then(function() {
 			if (s.isValid) {
-                setlistdb.save(s, function(err, id) {
+                setlistDB.save(s, function(err, id) {
                     if (err !== null) {
                         res.status(500).json(new error(err));
                     } else {
@@ -344,7 +358,7 @@ apiRouter.route('/set/:set_id')
      *
      */
 	.delete(function(req, res) {
-        SetListDB.delete(req.params.set_id, function(err) {
+        setlistDB.delete(req.params.set_id, function(err) {
             if (err !== null) {
                 res.status(500).json(new error(err));
             } else {

@@ -7,7 +7,7 @@ var response = function(payload)  {
     if (typeof payload === 'object') {
         for (var key in payload) {
             // handle 3 basic types, set in types
-            if (types.indexOf(typeof r[key]) > -1 && r[key] !== null && r[key] !== '') { 
+            if (types.indexOf(typeof payload[key]) > -1 && payload[key] !== null && payload[key] !== '') { 
                 r[key] = payload[key];
             }
         }
