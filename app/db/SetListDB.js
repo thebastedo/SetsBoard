@@ -22,12 +22,12 @@ var SetListDB = function() {
             cb(error);
         },
 
-        findAll: function() {
-            return [];
+        findAll: function(cb) {
+            cb([]);
         },
 
-        findById: function(id) {
-            return SetList.create({_id: id, name: 'name', duration: 229, status: 'learning'});
+        findById: function(id, cb) {
+            cb(SetList.create({_id: id, name: 'name', duration: 229, status: 'learning'}));
         },
 
         _create: function(s, cb) { cb(null); },
