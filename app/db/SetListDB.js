@@ -18,20 +18,42 @@ var SetListDB = function() {
         },
 
         delete: function(s, cb) {
-            var error = null;
-            cb(error);
+            db.run(
+                'DELETE FROM setlist WHERE(id=?)',
+                [s.id()],
+                function(error, rows) { cb(error, rows); }
+            );
         },
 
         findAll: function(cb) {
-            cb([]);
+            db.run(
+                'SELECT * FROM setlist',
+                function(error, rows) { cb(error, rows); }
+            );
         },
 
         findById: function(id, cb) {
-            cb(SetList.create({_id: id, name: 'name', duration: 229, status: 'learning'}));
+            db.run(
+                'SELECT * FROM setlist WHERE(id=?)',
+                [id],
+                function(error, rows) { cb(error, rows); }
+            );
         },
 
-        _create: function(s, cb) { cb(null); },
-        _update: function(s, cb) { cb(null); }
+        _create: function(s, cb) { 
+            db.run(
+                'INSERT INTO setlist (?, ?, ?) VALUES (NULL, ?, NULL, NULL)',
+                [s.id(), s.name(), s.songid],
+                function(error, rows) { cb(error, rows); }
+            );
+        },
+        _update: function(s, cb) {
+            db.run(
+                'UPDATE setlist SET name=?',
+                [s.name()],
+                function(error, rows) { cb(error, rows); }
+            );
+        }
     };
 };
 
