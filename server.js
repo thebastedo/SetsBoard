@@ -21,8 +21,9 @@ app.use(morgan('combined'));
 // API Routes
 app.use('/api', apiroutes);
 // API Docs
-console.log('API Docs (' + __dirname + '/app/docs) available at /docs');
 app.use('/docs', express.static(__dirname + '/app/docs'));
+// Mochawesome report 
+app.use('/tests', express.static(__dirname + '/mochawesome-reports'));
 
 // Control View Routes
 app.use('/control', controlroutes);

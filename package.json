@@ -10,5 +10,12 @@
     "morgan": "^1.5.1",
     "nodejs-model": "^0.1.6",
     "sqlite3": "^3.0.2"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.11.0",
+    "grunt-mocha-test": "^0.12.7",
+    "mocha": "^2.2.1",
+    "mochawesome": "^1.1.1"
   }
 }
